@@ -1,0 +1,285 @@
+/* Global Styles for LUCT Reporting App - Attractive, Mixed Colors */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); /* Subtle gradient background */
+  color: #333;
+  min-height: 100vh;
+}
+
+.App {
+  min-height: 100vh;
+}
+
+/* Navigation Bar - Clean, Fixed Top */
+.navbar {
+  background: linear-gradient(90deg, #007bff 0%, #6f42c1 100%) !important; /* Blue-purple gradient */
+  box-shadow: 0 2px 10px rgba(0, 123, 255, 0.2);
+  padding: 0.75rem 0;
+}
+
+.navbar-brand {
+  color: rgb(34, 49, 85) !important;
+  font-weight: 600;
+  font-size: 1.5rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.nav-link {
+  color: rgb(22, 59, 110) !important;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #ffd700 !important; /* Gold hover for pop */
+  text-decoration: underline;
+}
+
+.btn-link {
+  color: white !important;
+}
+
+/* Home Page Styles */
+.home-header {
+  background: linear-gradient(135deg, #007bff 0%, #6f42c1 100%);
+  color: rgb(57, 96, 169);
+  padding: 4rem 0;
+  margin-bottom: 2rem;
+  border-radius: 0 0 50px 50px;
+  box-shadow: 0 4px 20px rgba(0, 123, 255, 0.3);
+}
+
+.display-4 {
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lead {
+  font-size: 1.0rem;
+  font-weight: 100;
+}
+
+.list-unstyled li {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  border-left: 4px solid #28a745;
+}
+
+.home-image {
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.home-image:hover {
+  transform: scale(1.05);
+}
+
+.home-container {
+  max-width: 50px; /* Reduced from 1000px for compact feel */
+  padding: 1.5rem; /* Tighter padding */
+  margin: 1rem auto; /* Less margin */
+}
+
+/* ... rest of CSS unchanged ... */
+
+/* Buttons - Attractive with Gradients & Shadows */
+.btn-primary {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  border: none;
+  border-radius: 25px;
+  padding: 0.75rem 2rem;
+  font-weight: 500;
+  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+  background: linear-gradient(135deg, #0056b3 0%, #007bff 100%);
+}
+
+.btn-outline-secondary {
+  border-color: #6f42c1;
+  color: #6f42c1;
+  border-radius: 25px;
+  padding: 0.75rem 2rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-secondary:hover {
+  background: #6f42c1;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  border: none;
+  border-radius: 25px;
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+/* Forms (Login/Register/Dashboards) - Clean & Modern */
+.container {
+  max-width: 1000px;
+  background: white;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  margin: 2rem auto;
+}
+
+.form-container {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #6f42c1; /* Purple accent */
+}
+
+.form-control, .form-select, .form-control[readonly] {
+  border: 2px solid #e9ecef;
+  border-radius: 10px;
+  padding: 0.75rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Tables (Dashboards) - Styled for Readability */
+.table {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.table th {
+  background: linear-gradient(90deg, #007bff 0%, #6f42c1 100%);
+  color: white;
+  font-weight: 600;
+  border: none;
+  padding: 1rem;
+}
+
+.table td {
+  padding: 1rem;
+  vertical-align: middle;
+  border-color: #f8f9fa;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 123, 255, 0.05); /* Light blue tint */
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(40, 167, 69, 0.1); /* Green hover */
+}
+
+/* Modals - Elegant Overlay */
+.modal-content {
+  border-radius: 20px;
+  border: none;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  background: linear-gradient(90deg, #007bff 0%, #6f42c1 100%);
+  color: white;
+  border-radius: 20px 20px 0 0;
+}
+
+.modal-title {
+  font-weight: 600;
+}
+
+/* Input Groups & Search */
+.input-group .form-control {
+  border-radius: 10px 0 0 10px;
+}
+
+.input-group .btn {
+  border-radius: 0 10px 10px 0;
+  background: #28a745;
+  border: none;
+}
+
+/* Alerts - Colored for UX */
+.alert-danger {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: white;
+  border-radius: 10px;
+  border: none;
+}
+
+.alert-success {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  border-radius: 10px;
+  border: none;
+}
+
+/* Dashboard Headers */
+.dashboard h2 {
+  color: #6f42c1;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 2rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .navbar-brand {
+    font-size: 1.25rem;
+  }
+  
+  .container {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+  
+  .display-4 {
+    font-size: 2rem;
+  }
+  
+  .home-image {
+    margin-top: 2rem;
+  }
+}
+
+/* Animations for Engagement */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.container, .navbar {
+  animation: fadeInUp 0.6s ease-out;
+}
