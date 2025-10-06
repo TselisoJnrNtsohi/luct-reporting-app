@@ -24,7 +24,7 @@ const PLDashboard = () => {
 
   const fetchFaculties = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/faculties', config);
+      const res = await axios.get('https://backend-placeholder.onrender.com/api/faculties', config);
       setFaculties(res.data);
     } catch (err) {
       setError('Failed to fetch faculties');
@@ -33,7 +33,7 @@ const PLDashboard = () => {
 
   const fetchCourses = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/courses', config); // Add GET /api/courses route if needed
+      const res = await axios.get('https://backend-placeholder.onrender.com/api/courses', config); // Add GET /api/courses route if needed
       setCourses(res.data);
     } catch (err) {
       setError('Failed to fetch courses');
@@ -43,7 +43,7 @@ const PLDashboard = () => {
   const handleCourseSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/courses', formData, config);
+      await axios.post('https://backend-placeholder.onrender.com/api/courses', formData, config);
       setShowCourseModal(false);
       setFormData({ name: '', code: '', faculty_id: '' });
       fetchCourses();
@@ -56,7 +56,7 @@ const PLDashboard = () => {
   const handleClassSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/classes', classFormData, config);
+      await axios.post('https://backend-placeholder.onrender.com/api/classes', classFormData, config);
       setShowClassModal(false);
       setClassFormData({ name: '', course_id: '', total_students: '', venue: '', scheduled_time: '' });
       alert('Class added');
@@ -67,7 +67,7 @@ const PLDashboard = () => {
 
   const handleSearch = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/search/courses?q=${searchQuery}`, config);
+      const res = await axios.get(`https://backend-placeholder.onrender.com/api/search/courses?q=${searchQuery}`, config);
       setCourses(res.data);
     } catch (err) {
       setError('Search failed');

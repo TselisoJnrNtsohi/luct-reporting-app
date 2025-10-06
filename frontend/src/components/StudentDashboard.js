@@ -22,7 +22,7 @@ const StudentDashboard = () => {
 
   const fetchLectures = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/reports/Student', config);
+      const res = await axios.get('https://backend-placeholder.onrender.com/api/reports/Student', config);
       setLectures(res.data);
     } catch (err) {
       setError('Failed to fetch lectures');
@@ -31,7 +31,7 @@ const StudentDashboard = () => {
 
   const fetchRatings = async (lectureId) => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/monitoring/${lectureId}`, config);
+      const res = await axios.get(`https://backend-placeholder.onrender.com/api/monitoring/${lectureId}`, config);
       setRatings(res.data);
     } catch (err) {
       setError('Failed to fetch ratings');
@@ -41,7 +41,7 @@ const StudentDashboard = () => {
   const handleRatingSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/rating', { 
+      await axios.post('https://backend-placeholder.onrender.com/api/rating', { 
         lecture_id: selectedLecture.id, 
         rating: ratingData.rating, 
         comments: ratingData.feedback  // Sent as comments in backend
@@ -58,7 +58,7 @@ const StudentDashboard = () => {
 
   const handleSearch = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/search/lectures?q=${searchQuery}`, config);
+      const res = await axios.get(`https://backend-placeholder.onrender.com/api/search/lectures?q=${searchQuery}`, config);
       setLectures(res.data);
     } catch (err) {
       setError('Search failed');

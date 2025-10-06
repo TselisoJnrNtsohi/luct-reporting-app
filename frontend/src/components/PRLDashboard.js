@@ -21,7 +21,7 @@ const PRLDashboard = () => {
 
   const fetchReports = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/reports/PRL?faculty_id=1', config); // Adjust faculty_id
+      const res = await axios.get('https://backend-placeholder.onrender.com/api/reports/PRL?faculty_id=1', config); // Adjust faculty_id
       setReports(res.data);
     } catch (err) {
       setError('Failed to fetch reports');
@@ -30,7 +30,7 @@ const PRLDashboard = () => {
 
   const handleFeedback = async (lectureId) => {
     try {
-      await axios.post('http://localhost:5000/api/feedback', { lecture_id: lectureId, feedback_text: feedbackText }, config);
+      await axios.post('https://backend-placeholder.onrender.com/api/feedback', { lecture_id: lectureId, feedback_text: feedbackText }, config);
       setFeedbackText('');
       setShowModal(false);
       fetchReports();
@@ -42,7 +42,7 @@ const PRLDashboard = () => {
 
   const handleSearch = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/search/lectures?q=${searchQuery}`, config);
+      const res = await axios.get(`https://backend-placeholder.onrender.com/api/search/lectures?q=${searchQuery}`, config);
       setReports(res.data);
     } catch (err) {
       setError('Search failed');
@@ -76,7 +76,7 @@ const PRLDashboard = () => {
               <td>{report.date_of_lecture}</td>
               <td>
                 <Button size="sm" variant="primary" onClick={() => { setSelectedLecture(report); setShowModal(true); }}>Add Feedback</Button>
-                <Button size="sm" className="ms-1" onClick={() => window.open(`http://localhost:5000/api/export/reports/${report.id}`, '_blank')}>Export</Button>
+                <Button size="sm" className="ms-1" onClick={() => window.open(`https://backend-placeholder.onrender.com/api/export/reports/${report.id}`, '_blank')}>Export</Button>
               </td>
             </tr>
           ))}

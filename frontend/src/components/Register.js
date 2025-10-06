@@ -17,7 +17,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/register', formData);
+      await axios.post('https://backend-placeholder.onrender.com/api/register', formData);
       alert('Registered! Please login.');
       navigate('/login');
     } catch (err) {

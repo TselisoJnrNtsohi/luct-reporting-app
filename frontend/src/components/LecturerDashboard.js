@@ -24,7 +24,7 @@ const LecturerDashboard = () => {
 
   const fetchClasses = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/classes', config);
+      const res = await axios.get('https://backend-placeholder.onrender.com/api/classes', config);
       setClasses(res.data);
     } catch (err) {
       setError('Failed to fetch classes');
@@ -33,7 +33,7 @@ const LecturerDashboard = () => {
 
   const fetchReports = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/reports/Lecturer', config);
+      const res = await axios.get('https://backend-placeholder.onrender.com/api/reports/Lecturer', config);
       setReports(res.data);
     } catch (err) {
       setError('Failed to fetch reports');
@@ -43,7 +43,7 @@ const LecturerDashboard = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/lectures', formData, config);
+      await axios.post('https://backend-placeholder.onrender.com/api/lectures', formData, config);
       fetchReports();
       alert('Report submitted');
     } catch (err) {
@@ -53,7 +53,7 @@ const LecturerDashboard = () => {
 
   const handleSearch = async () => {
     try {
-      const res = await axios.get(`http://localhost:5000/api/search/lectures?q=${searchQuery}`, config);
+      const res = await axios.get(`https://backend-placeholder.onrender.com/api/search/lectures?q=${searchQuery}`, config);
       setReports(res.data);
     } catch (err) {
       setError('Search failed');
@@ -61,7 +61,7 @@ const LecturerDashboard = () => {
   };
 
   const exportExcel = (id) => {
-    window.open(`http://localhost:5000/api/export/reports/${id}`, '_blank');
+    window.open(`https://backend-placeholder.onrender.com/export/reports/${id}`, '_blank');
   };
 
   const logout = () => {
