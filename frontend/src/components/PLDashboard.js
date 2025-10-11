@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Form, Button, Table, Container, Modal, InputGroup, FormControl, Alert, Row, Col } from 'react-bootstrap';
+import { Form, Button, Table, Container, Modal, InputGroup, FormControl, Alert, Row, Col, Tabs, Tab } from 'react-bootstrap';
 
 const PLDashboard = () => {
   const [faculties, setFaculties] = useState([]);
   const [courses, setCourses] = useState([]);
-  const [formData, setFormData] = useState({ name: '', code: '', faculty_id: '' });
+  const [lecturers, setLecturers] = useState([]);
+  const [classes, setClasses] = useState([]);
+  const [lectures, setLectures] = useState([]);
+  const [reports, setReports] = useState([]);
+  const [formData, setFormData] = useState({ name: '', code: '', faculty_id: '', lecturer_id: '' });
   const [showCourseModal, setShowCourseModal] = useState(false);
   const [showClassModal, setShowClassModal] = useState(false);
-  const [classFormData, setClassFormData] = useState({ name: '', course_id: '', total_students: '', venue: '', scheduled_time: '' });
+  const [activeTab, setActiveTab] = useState('courses');
   const [searchQuery, setSearchQuery] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -20,11 +24,15 @@ const PLDashboard = () => {
   useEffect(() => {
     fetchFaculties();
     fetchCourses();
+    fetchLecturers();
+    fetchClasses();
+    fetchLectures();
+    fetchReports();
   }, []);
 
   const fetchFaculties = async () => {
     try {
-      const res = await axios.get('https://backend-placeholder.onrender.com/api/faculties', config);
+      const res = await axios.get('http://localhost:5000/api/faculties', config);
       setFaculties(res.data);
     } catch (err) {
       setError('Failed to fetch faculties');
@@ -33,19 +41,55 @@ const PLDashboard = () => {
 
   const fetchCourses = async () => {
     try {
-      const res = await axios.get('https://backend-placeholder.onrender.com/api/courses', config); // Add GET /api/courses route if needed
+      const res = await axios.get('http://localhost:5000/api/courses', config);
       setCourses(res.data);
     } catch (err) {
       setError('Failed to fetch courses');
     }
   };
 
+  const fetchLecturers = async () => {
+    try {
+      const res = await axios.get('http://localhost:5000/api/lecturers', config);
+      setLecturers(res.data);
+    } catch (err) {
+      setError('Failed to fetch lecturers');
+    }
+  };
+
+  const fetchClasses = async () => {
+    try {
+      const res = await axios.get('http://localhost:5000/api/classes', config);
+      setClasses(res.data);
+    } catch (err) {
+      setError('Failed to fetch classes');
+    }
+  };
+
+  const fetchLectures = async () => {
+    try {
+      const res = await axios.get('http://localhost:5000/api/lectures', config);  // New route if needed
+      setLectures(res.data);
+    } catch (err) {
+      setError('Failed to fetch lectures');
+    }
+  };
+
+  const fetchReports = async () => {
+    try {
+      const res = await axios.get('http://localhost:5000/api/reports/PL', config);
+      setReports(res.data);
+    } catch (err) {
+      setError('Failed to fetch reports');
+    }
+  };
+
   const handleCourseSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('https://backend-placeholder.onrender.com/api/courses', formData, config);
+      await axios.post('http://localhost:5000/api/courses', formData, config);
       setShowCourseModal(false);
-      setFormData({ name: '', code: '', faculty_id: '' });
+      setFormData({ name: '', code: '', faculty_id: '', lecturer_id: '' });
       fetchCourses();
       alert('Course added');
     } catch (err) {
@@ -53,21 +97,20 @@ const PLDashboard = () => {
     }
   };
 
-  const handleClassSubmit = async (e) => {
-    e.preventDefault();
+  const handleAssignLecturer = async (courseId) => {
+    const lecturer_id = prompt('Enter lecturer ID:');
     try {
-      await axios.post('https://backend-placeholder.onrender.com/api/classes', classFormData, config);
-      setShowClassModal(false);
-      setClassFormData({ name: '', course_id: '', total_students: '', venue: '', scheduled_time: '' });
-      alert('Class added');
+      await axios.post('http://localhost:5000/api/assign-lecturer', { course_id: courseId, lecturer_id }, config);
+      alert('Lecturer assigned');
+      fetchCourses();
     } catch (err) {
-      setError(err.response?.data.msg || 'Add class failed');
+      setError('Assignment failed');
     }
   };
 
   const handleSearch = async () => {
     try {
-      const res = await axios.get(`https://backend-placeholder.onrender.com/api/search/courses?q=${searchQuery}`, config);
+      const res = await axios.get(`http://localhost:5000/api/search/courses?q=${searchQuery}`, config);
       setCourses(res.data);
     } catch (err) {
       setError('Search failed');
@@ -82,33 +125,97 @@ const PLDashboard = () => {
   return (
     <Container className="dashboard mt-5">
       <Row>
-        <Col><h2>PL Dashboard - Manage Courses & Classes</h2></Col>
+        <Col><h2>PL Dashboard</h2></Col>
         <Col className="text-end"><Button variant="outline-danger" onClick={logout}>Logout</Button></Col>
       </Row>
       {error && <Alert variant="danger">{error}</Alert>}
-      <Button className="mb-3" onClick={() => setShowCourseModal(true)}>Add Course</Button>
-      <Button className="mb-3 ms-2" onClick={() => setShowClassModal(true)}>Add Class</Button>
+      <Tabs activeKey={activeTab} onSelect={(k) => setActiveTab(k)} className="mb-3">
+        <Tab eventKey="courses" title="Courses">
+          <Button className="mb-3" onClick={() => setShowCourseModal(true)}>Add Course</Button>
+          <InputGroup className="mb-3">
+            <FormControl placeholder="Search courses..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+            <Button onClick={handleSearch}>Search</Button>
+          </InputGroup>
+          <Table striped bordered hover>
+            <thead><tr><th>ID</th><th>Name</th><th>Code</th><th>Faculty</th><th>Assigned Lecturer</th><th>Actions</th></tr></thead>
+            <tbody>
+              {courses.map(course => (
+                <tr key={course.id}>
+                  <td>{course.id}</td>
+                  <td>{course.name}</td>
+                  <td>{course.code}</td>
+                  <td>{course.faculty_name}</td>
+                  <td>{course.lecturer_name || 'N/A'}</td>
+                  <td><Button size="sm" onClick={() => handleAssignLecturer(course.id)}>Assign Lecturer</Button></td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </Tab>
+        <Tab eventKey="reports" title="Reports">
+          <Table striped bordered hover>
+            <thead><tr><th>Report</th><th>PRL Feedback</th><th>Actions</th></tr></thead>
+            <tbody>
+              {reports.map(report => (
+                <tr key={report.id}>
+                  <td>{report.topic_taught}</td>
+                  <td>{report.feedback_text || 'N/A'}</td>
+                  <td><Button>View/Approve</Button></td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </Tab>
+        <Tab eventKey="monitoring" title="Monitoring">
+          <Table striped bordered hover>
+            <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>Total Students</td><td>{/* Fetch count */}</td></tr>
+              <tr><td>Avg Attendance</td><td>{/* Calculate */}</td></tr>
+              <tr><td>Overall Rating</td><td>{/* Avg */}</td></tr>
+            </tbody>
+          </Table>
+        </Tab>
+        <Tab eventKey="classes" title="Classes">
+          <Table striped bordered hover>
+            <thead><tr><th>Class</th><th>Course</th><th>Venue</th><th>Time</th></tr></thead>
+            <tbody>
+              {classes.map(cls => (
+                <tr key={cls.id}>
+                  <td>{cls.name}</td>
+                  <td>{cls.course_name}</td>
+                  <td>{cls.venue}</td>
+                  <td>{cls.scheduled_time}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </Tab>
+        <Tab eventKey="lectures" title="Lectures">
+          <Table striped bordered hover>
+            <thead><tr><th>Lecture</th><th>Class</th><th>Lecturer</th><th>Date</th></tr></thead>
+            <tbody>
+              {lectures.map(lec => (
+                <tr key={lec.id}>
+                  <td>{lec.topic_taught}</td>
+                  <td>{lec.class_name}</td>
+                  <td>{lec.lecturer_name}</td>
+                  <td>{lec.date_of_lecture}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </Tab>
+        <Tab eventKey="rating" title="Rating">
+          <Table striped bordered hover>
+            <thead><tr><th>Entity</th><th>Rating</th><th>Feedback</th></tr></thead>
+            <tbody>
+              {/* System-wide ratings */}
+            </tbody>
+          </Table>
+        </Tab>
+      </Tabs>
 
-      <InputGroup className="mb-3">
-        <FormControl placeholder="Search courses..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
-        <Button onClick={handleSearch}>Search</Button>
-      </InputGroup>
-
-      <Table striped bordered hover>
-        <thead><tr><th>ID</th><th>Name</th><th>Code</th><th>Faculty</th></tr></thead>
-        <tbody>
-          {courses.map(course => (
-            <tr key={course.id}>
-              <td>{course.id}</td>
-              <td>{course.name}</td>
-              <td>{course.code}</td>
-              <td>{course.faculty_name || 'N/A'}</td> {/* Assume join in backend */}
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-
-      {/* Course Modal */}
       <Modal show={showCourseModal} onHide={() => setShowCourseModal(false)}>
         <Modal.Header closeButton><Modal.Title>Add Course</Modal.Title></Modal.Header>
         <Modal.Body>
@@ -127,39 +234,6 @@ const PLDashboard = () => {
                 <option value="">Select</option>
                 {faculties.map(fac => <option key={fac.id} value={fac.id}>{fac.name}</option>)}
               </Form.Select>
-            </Form.Group>
-            <Button type="submit">Add</Button>
-          </Form>
-        </Modal.Body>
-      </Modal>
-
-      {/* Class Modal */}
-      <Modal show={showClassModal} onHide={() => setShowClassModal(false)}>
-        <Modal.Header closeButton><Modal.Title>Add Class</Modal.Title></Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleClassSubmit}>
-            <Form.Group className="mb-3">
-              <Form.Label>Name</Form.Label>
-              <Form.Control value={classFormData.name} onChange={(e) => setClassFormData({ ...classFormData, name: e.target.value })} />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Course</Form.Label>
-              <Form.Select value={classFormData.course_id} onChange={(e) => setClassFormData({ ...classFormData, course_id: e.target.value })}>
-                <option value="">Select</option>
-                {courses.map(course => <option key={course.id} value={course.id}>{course.name}</option>)}
-              </Form.Select>
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Total Students</Form.Label>
-              <Form.Control type="number" value={classFormData.total_students} onChange={(e) => setClassFormData({ ...classFormData, total_students: e.target.value })} />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Venue</Form.Label>
-              <Form.Control value={classFormData.venue} onChange={(e) => setClassFormData({ ...classFormData, venue: e.target.value })} />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Scheduled Time</Form.Label>
-              <Form.Control type="time" value={classFormData.scheduled_time} onChange={(e) => setClassFormData({ ...classFormData, scheduled_time: e.target.value })} />
             </Form.Group>
             <Button type="submit">Add</Button>
           </Form>

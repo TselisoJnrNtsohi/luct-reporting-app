@@ -5,7 +5,7 @@ import { Form, Button, Container, Alert } from 'react-bootstrap';
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    username: '', password: '', role: 'Student', full_name: '', email: ''
+    username: '', password: '', role: 'Student', full_name: '', email: '', student_id: ''  // Removed stream
   });
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('https://backend-placeholder.onrender.com/api/register', formData);
+      await axios.post('http://localhost:5000/api/register', formData);
       alert('Registered! Please login.');
       navigate('/login');
     } catch (err) {
@@ -56,6 +56,12 @@ const Register = () => {
           <Form.Label>Email</Form.Label>
           <Form.Control type="email" name="email" onChange={handleChange} required />
         </Form.Group>
+        {formData.role === 'Student' && (
+          <Form.Group className="mb-3">
+            <Form.Label>Student ID</Form.Label>
+            <Form.Control type="text" name="student_id" onChange={handleChange} required />
+          </Form.Group>
+        )}
         <Button type="submit" className="btn-primary">Register</Button>
       </Form>
     </Container>

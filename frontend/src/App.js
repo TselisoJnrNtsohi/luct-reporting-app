@@ -10,6 +10,7 @@ import PLDashboard from './components/PLDashboard';
 import StudentDashboard from './components/StudentDashboard';
 import './App.css';
 
+// Navbar component with its own local role state
 function Navbar() {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [role, setRole] = useState('');
@@ -22,6 +23,7 @@ function Navbar() {
         setRole(decoded.role);
       } catch (err) {
         setToken(null);
+        setRole('');
       }
     }
   }, [token]);
@@ -33,6 +35,21 @@ function Navbar() {
     navigate('/');
   };
 
+  const getMenuItems = () => {
+    switch (role) {
+      case 'Student':
+        return ['Home', 'Classes', 'Monitoring', 'Rating', 'Profile'];
+      case 'Lecturer':
+        return ['Home', 'Classes', 'Reports', 'Monitoring', 'Rating'];
+      case 'PRL':
+        return ['Home', 'Courses', 'Reports', 'Monitoring', 'Rating', 'Classes'];
+      case 'PL':
+        return ['Home', 'Courses', 'Reports', 'Monitoring', 'Classes', 'Lectures', 'Rating'];
+      default:
+        return ['Home'];
+    }
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light mb-4">
       <div className="container">
@@ -40,7 +57,15 @@ function Navbar() {
         <div className="navbar-nav ms-auto">
           {token ? (
             <>
-              <Link className="nav-link" to={`/${role.toLowerCase()}`}>Dashboard</Link>
+              {getMenuItems().map(item => (
+                <Link
+                  key={item}
+                  className="nav-link"
+                  to={`/${role.toLowerCase()}/${item.toLowerCase()}`}
+                >
+                  {item}
+                </Link>
+              ))}
               <button className="nav-link btn btn-link" onClick={handleLogout}>Logout</button>
             </>
           ) : (
@@ -55,27 +80,7 @@ function Navbar() {
   );
 }
 
-function App() {
-  return (
-    <Router>
-      <div className="App">
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/lecturer" element={<ProtectedRoute component={LecturerDashboard} role="Lecturer" />} />
-          <Route path="/prl" element={<ProtectedRoute component={PRLDashboard} role="PRL" />} />
-          <Route path="/pl" element={<ProtectedRoute component={PLDashboard} role="PL" />} />
-          <Route path="/student" element={<ProtectedRoute component={StudentDashboard} role="Student" />} />
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </div>
-    </Router>
-  );
-}
-
-// Protected Route Helper
+// ProtectedRoute component
 function ProtectedRoute({ component: Component, role }) {
   const token = localStorage.getItem('token');
   let userRole = '';
@@ -87,6 +92,29 @@ function ProtectedRoute({ component: Component, role }) {
     }
   }
   return token && userRole === role ? <Component /> : <Navigate to="/" />;
+}
+
+// Main App
+function App() {
+  return (
+    <Router>
+      <div className="App">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
+          <Route path="/student/*" element={<ProtectedRoute component={StudentDashboard} role="Student" />} />
+          <Route path="/lecturer/*" element={<ProtectedRoute component={LecturerDashboard} role="Lecturer" />} />
+          <Route path="/prl/*" element={<ProtectedRoute component={PRLDashboard} role="PRL" />} />
+          <Route path="/pl/*" element={<ProtectedRoute component={PLDashboard} role="PL" />} />
+
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </div>
+    </Router>
+  );
 }
 
 export default App;

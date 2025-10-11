@@ -12,7 +12,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('https://backend-placeholder.onrender.com/api/login', { username, password });
+      const res = await axios.post('http://localhost:5000/api/login', { username, password });
       localStorage.setItem('token', res.data.token);
       const rolePath = res.data.user.role.toLowerCase();
       navigate(`/${rolePath}`);
